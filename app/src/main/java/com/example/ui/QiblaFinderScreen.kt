@@ -13,6 +13,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -351,33 +353,22 @@ fun QiblaFinderScreen(
                     }
                 }
             } else {
+                val scrollState = rememberScrollState()
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    DetailsCard(
-                        userLocationName = userLocationName,
-                        userLatitude = userLatitude,
-                        userLongitude = userLongitude,
-                        distanceToKaaba = distanceToKaaba,
-                        qiblaAngle = qiblaAngle,
-                        isSensorAvailable = isSensorAvailable,
-                        sensorAccuracy = sensorAccuracy
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
                     Box(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        val computedSize = minOf(screenWidth, screenHeight * 0.5f)
-                        val boundedCompassSize = computedSize.coerceIn(160.dp, 290.dp)
+                        val boundedCompassSize = (screenWidth * 0.75f).coerceIn(180.dp, 280.dp)
                         
                         CompassDial(
                             boundedCompassSize = boundedCompassSize,
@@ -394,7 +385,15 @@ fun QiblaFinderScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    DetailsCard(
+                        userLocationName = userLocationName,
+                        userLatitude = userLatitude,
+                        userLongitude = userLongitude,
+                        distanceToKaaba = distanceToKaaba,
+                        qiblaAngle = qiblaAngle,
+                        isSensorAvailable = isSensorAvailable,
+                        sensorAccuracy = sensorAccuracy
+                    )
 
                     GuidanceControls(
                         isAligned = isAligned,
