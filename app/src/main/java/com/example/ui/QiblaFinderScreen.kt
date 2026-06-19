@@ -279,710 +279,136 @@ fun QiblaFinderScreen(
             )
         }
     ) { padding ->
-        Column(
-            modifier = modifier
+        BoxWithConstraints(
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Modern detailed visual dashboard card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp)),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
-                ),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                )
-            ) {
+            val screenWidth = maxWidth
+            val screenHeight = maxHeight
+            val isLandscape = screenWidth > screenHeight
+
+            if (isLandscape) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1.1f)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        DetailsCard(
+                            userLocationName = userLocationName,
+                            userLatitude = userLatitude,
+                            userLongitude = userLongitude,
+                            distanceToKaaba = distanceToKaaba,
+                            qiblaAngle = qiblaAngle,
+                            isSensorAvailable = isSensorAvailable,
+                            sensorAccuracy = sensorAccuracy
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        GuidanceControls(
+                            isAligned = isAligned,
+                            isLevel = isLevel,
+                            isSensorAvailable = isSensorAvailable,
+                            relativeQiblaAngle = relativeQiblaAngle,
+                            manualHeading = manualHeading,
+                            onManualHeadingChange = { manualHeading = it }
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val computedSize = minOf(screenWidth * 0.45f, screenHeight * 0.85f)
+                        val boundedCompassSize = computedSize.coerceIn(160.dp, 320.dp)
+                        
+                        CompassDial(
+                            boundedCompassSize = boundedCompassSize,
+                            isAligned = isAligned,
+                            isLevel = isLevel,
+                            finalHeading = finalHeading,
+                            qiblaAngle = qiblaAngle,
+                            relativeQiblaAngle = relativeQiblaAngle,
+                            rollState = rollState,
+                            pitchState = pitchState,
+                            primaryColor = MaterialTheme.colorScheme.primary,
+                            onSurfaceColor = MaterialTheme.colorScheme.onSurface,
+                            textSecondary = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
+                        )
+                    }
+                }
+            } else {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(46.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                          Icon(
-                              imageVector = Icons.Default.Place,
-                              contentDescription = "Location Pin",
-                              tint = MaterialTheme.colorScheme.primary,
-                              modifier = Modifier.size(22.dp)
-                          )
-                        }
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                    text = "LOKASI SAAT INI",
-                                    fontSize = 10.sp,
-                                    letterSpacing = 1.sp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = userLocationName,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                        
-                        // Angle Display Badge
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    brush = Brush.horizontalGradient(
-                                        colors = listOf(
-                                            MaterialTheme.colorScheme.primary,
-                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-                                        )
-                                    ),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = String.format(Locale.getDefault(), "%.1f°", qiblaAngle),
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                    
-                    Spacer(modifier = Modifier.height(12.dp))
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.08f)
+                    DetailsCard(
+                        userLocationName = userLocationName,
+                        userLatitude = userLatitude,
+                        userLongitude = userLongitude,
+                        distanceToKaaba = distanceToKaaba,
+                        qiblaAngle = qiblaAngle,
+                        isSensorAvailable = isSensorAvailable,
+                        sensorAccuracy = sensorAccuracy
                     )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val computedSize = minOf(screenWidth, screenHeight * 0.5f)
+                        val boundedCompassSize = computedSize.coerceIn(160.dp, 290.dp)
+                        
+                        CompassDial(
+                            boundedCompassSize = boundedCompassSize,
+                            isAligned = isAligned,
+                            isLevel = isLevel,
+                            finalHeading = finalHeading,
+                            qiblaAngle = qiblaAngle,
+                            relativeQiblaAngle = relativeQiblaAngle,
+                            rollState = rollState,
+                            pitchState = pitchState,
+                            primaryColor = MaterialTheme.colorScheme.primary,
+                            onSurfaceColor = MaterialTheme.colorScheme.onSurface,
+                            textSecondary = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
-                    // Geolocation, Distance and Accuracy Metrics
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = "KOORDINAT",
-                                fontSize = 9.sp,
-                                letterSpacing = 0.5.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = String.format(Locale.US, "%.4f°, %.4f°", userLatitude, userLongitude),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
-                            )
-                        }
-                        
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "JARAK KE KA'BAH",
-                                fontSize = 9.sp,
-                                letterSpacing = 0.5.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = String.format(Locale.US, "%,.0f km", distanceToKaaba),
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Black,
-                                color = MaterialTheme.colorScheme.tertiary.takeOrElse { Color(0xFFD4AF37) }
-                            )
-                        }
-                    }
-                    
-                    if (isSensorAvailable) {
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = when (sensorAccuracy) {
-                                        SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF4CAF50).copy(alpha = 0.08f)
-                                        SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFFF9800).copy(alpha = 0.08f)
-                                        else -> Color(0xFFF44336).copy(alpha = 0.08f)
-                                    },
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .background(
-                                        color = when (sensorAccuracy) {
-                                            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF4CAF50)
-                                            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFFF9800)
-                                            else -> Color(0xFFF44336)
-                                        },
-                                        shape = CircleShape
-                                    )
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = when (sensorAccuracy) {
-                                    SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "Presisi Tinggi (Kompas Handal)"
-                                    SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "Presisi Sedang (Kalibrasi Ringan)"
-                                    else -> "Akurasi Rendah! Buat Gerakan Angka 8 untuk Kalibrasi"
-                                },
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = when (sensorAccuracy) {
-                                    SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF2E7D32)
-                                    SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFEF6C00)
-                                    else -> Color(0xFFC62828)
-                                }
-                            )
-                        }
-                    }
-                }
-            }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Main Interactive Compass and Qibla dial area
-            BoxWithConstraints(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                // Calculate responsive circle size based on available screen space
-                val isLandscape = maxWidth > maxHeight
-                val compassRelativePercent = if (isLandscape) 0.72f else 0.85f
-                val computedSize = minOf(maxWidth, maxHeight) * compassRelativePercent
-                val boundedCompassSize = computedSize.coerceIn(160.dp, 300.dp)
-
-                // Background shadow glow based on alignment lock and computed compass size
-                val animatedGlowSize by animateDpAsState(
-                    targetValue = if (isAligned) (boundedCompassSize + 30.dp) else (boundedCompassSize - 10.dp),
-                    animationSpec = tween(700, easing = LinearOutSlowInEasing),
-                    label = "glow_size"
-                )
-                val animatedGlowAlpha by animateFloatAsState(
-                    targetValue = if (isAligned) 0.22f else 0.05f,
-                    animationSpec = tween(500),
-                    label = "glow_alpha"
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(animatedGlowSize)
-                        .background(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    if (isAligned) Color(0xFF10B981) else MaterialTheme.colorScheme.primary,
-                                    Color.Transparent
-                                )
-                            ),
-                            shape = CircleShape
-                        )
-                        .graphicsLayer(alpha = animatedGlowAlpha)
-                )
-
-                // Beautiful intricate compass ring with dynamic sizing
-                Box(
-                    modifier = Modifier
-                        .size(boundedCompassSize)
-                        .background(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.surface,
-                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                                )
-                            ),
-                            shape = CircleShape
-                        )
-                        .border(
-                            width = if (isAligned) 6.dp else 2.dp,
-                            color = if (isAligned) Color(0xFF10B981) else MaterialTheme.colorScheme.outline.copy(alpha = 0.25f),
-                            shape = CircleShape
-                        )
-                        .padding((boundedCompassSize.value * 0.05f).dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val primaryColor = MaterialTheme.colorScheme.primary
-                    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
-                    val textSecondary = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
-
-                    // Rotating Compass Ring (tied to -heading so North points North)
-                    Canvas(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .rotate(-finalHeading.toFloat())
-                    ) {
-                        val canvasSize = size.width
-                        val center = Offset(canvasSize / 2, canvasSize / 2)
-                        val radius = canvasSize / 2
-
-                        // Draw fine background concentric lines for military/marine radar feel
-                        drawCircle(
-                            color = textSecondary.copy(alpha = 0.08f),
-                            radius = radius * 0.85f,
-                            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
-                        )
-                        drawCircle(
-                            color = textSecondary.copy(alpha = 0.08f),
-                            radius = radius * 0.65f,
-                            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
-                        )
-
-                        // 1. Draw Qibla visual sweeping cone segment (spotlight sweep sector)
-                        val sweepAngle = 30f
-                        val qiblaStartAngle = (qiblaAngle.toFloat() - 90f) - (sweepAngle / 2f)
-                        drawArc(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFFFFD4AF37).copy(alpha = 0.25f),
-                                    Color(0xFFFFD4AF37).copy(alpha = 0.05f),
-                                    Color.Transparent
-                                ),
-                                center = center,
-                                radius = radius
-                            ),
-                            startAngle = qiblaStartAngle,
-                            sweepAngle = sweepAngle,
-                            useCenter = true
-                        )
-
-                        // Draw micro graduation tick marks (all the way to 360, step 5 degrees!)
-                        for (angle in 0 until 360 step 5) {
-                            val angleRad = Math.toRadians(angle.toDouble())
-                            val isMain = angle % 90 == 0
-                            val isSub = angle % 30 == 0 && !isMain
-                            val isFine = !isMain && !isSub && angle % 15 != 0
-                            
-                            val startLength = if (isMain) 14.dp.toPx() else if (isSub) 9.dp.toPx() else 4.dp.toPx()
-                            val strokeWidth = if (isMain) 2.5.dp.toPx() else if (isSub) 1.5.dp.toPx() else 0.8.dp.toPx()
-                            
-                            val startX = (center.x + (radius - startLength) * sin(angleRad)).toFloat()
-                            val startY = (center.y - (radius - startLength) * cos(angleRad)).toFloat()
-                            val endX = (center.x + radius * sin(angleRad)).toFloat()
-                            val endY = (center.y - radius * cos(angleRad)).toFloat()
-
-                            val color = if (isMain && angle == 0) Color.Red // North is red
-                            else if (isMain) primaryColor
-                            else textSecondary.copy(alpha = if (isFine) 0.3f else 0.7f)
-
-                            drawLine(
-                                color = color,
-                                start = Offset(startX, startY),
-                                end = Offset(endX, endY),
-                                strokeWidth = strokeWidth
-                            )
-                        }
-
-                        // Draw modern degree numbers labels (30°, 60°, etc. rotated on the scale)
-                        for (degLabel in 30..330 step 30) {
-                            if (degLabel % 90 == 0) continue // Skip cardinal positions
-                            drawDegreesLabel(degLabel.toString(), degLabel.toFloat(), radius, textSecondary, center)
-                        }
-
-                        // Draw premium bold cardinal letters (U, T, S, B)
-                        drawCompassLabel("U", 0f, radius, Color.Red, center)
-                        drawCompassLabel("T", 90f, radius, onSurfaceColor, center)
-                        drawCompassLabel("S", 180f, radius, onSurfaceColor, center)
-                        drawCompassLabel("B", 270f, radius, onSurfaceColor, center)
-
-                        // Draw golden crescent Kaaba indicator on the outer dial system
-                        rotate(qiblaAngle.toFloat(), pivot = center) {
-                            drawCircle(
-                                color = Color(0xFFFFD4AF37),
-                                radius = 9.dp.toPx(),
-                                center = Offset(center.x, center.y - radius + 22.dp.toPx())
-                            )
-                            drawCircle(
-                                color = Color.White,
-                                radius = 4.dp.toPx(),
-                                center = Offset(center.x, center.y - radius + 22.dp.toPx())
-                            )
-                        }
-                    }
-
-                    // 2. Beautiful floating Qibla target needle pointing towards Mecca relative to screen orientation
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .rotate(relativeQiblaAngle.toFloat())
-                            .padding((boundedCompassSize.value * 0.12f).dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Canvas(modifier = Modifier.fillMaxSize()) {
-                            val canvasSize = size.width
-                            val center = Offset(canvasSize / 2, canvasSize / 2)
-
-                            // Dynamic colors depending on alignment locks
-                            val needleStartColor = if (isAligned) Color(0xFF10B981) else Color(0xFFFFF176)
-                            val needleEndColor = if (isAligned) Color(0xFF047857) else Color(0xFFD4AF37)
-
-                            // Symmetrical luxury double-pointed navigational arrow
-                            val pointerPath = Path().apply {
-                                moveTo(center.x, 6.dp.toPx()) // Pointer Tip
-                                lineTo(center.x - 12.dp.toPx(), center.y - 12.dp.toPx())
-                                lineTo(center.x - 3.dp.toPx(), center.y - 8.dp.toPx())
-                                lineTo(center.x - 3.dp.toPx(), center.y + 30.dp.toPx()) // Arrow Tail
-                                lineTo(center.x + 3.dp.toPx(), center.y + 30.dp.toPx())
-                                lineTo(center.x + 3.dp.toPx(), center.y - 8.dp.toPx())
-                                lineTo(center.x + 12.dp.toPx(), center.y - 12.dp.toPx())
-                                close()
-                            }
-
-                            drawPath(
-                                path = pointerPath,
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(needleStartColor, needleEndColor)
-                                )
-                            )
-
-                            // Inlay line inside the needle for high precision divider look
-                            drawLine(
-                                color = Color.Black.copy(alpha = 0.15f),
-                                start = Offset(center.x, 8.dp.toPx()),
-                                end = Offset(center.x, center.y + 30.dp.toPx()),
-                                strokeWidth = 2.dp.toPx()
-                            )
-                        }
-
-                        // Gold Dome Mecca marker at the needle's tip
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .offset(y = (-11).dp)
-                                .size((boundedCompassSize.value * 0.11f).coerceIn(24f, 36f).dp)
-                                .background(
-                                    brush = Brush.radialGradient(
-                                        colors = listOf(Color(0xFFFFF7C0), Color(0xFFD4AF37))
-                                    ),
-                                    shape = CircleShape
-                                )
-                                .border(1.5.dp, Color.White, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Mosque,
-                                contentDescription = null,
-                                tint = Color(0xFF131D19),
-                                modifier = Modifier.size((boundedCompassSize.value * 0.057f).coerceIn(12f, 18f).dp)
-                            )
-                        }
-                    }
-
-                    // 3. Central bubble level waterpass (measures inclination for maximum compass accuracy)
-                    val bubbleLevelSize = (boundedCompassSize.value * 0.27f).coerceIn(55f, 80f).dp
-                    val bubbleTravelFactor = (boundedCompassSize.value * 0.08f).coerceIn(14f, 24f)
-
-                    Box(
-                        modifier = Modifier
-                            .size(bubbleLevelSize)
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        MaterialTheme.colorScheme.surface,
-                                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                                    )
-                                ),
-                                shape = CircleShape
-                            )
-                            .border(
-                                width = 2.dp,
-                                color = if (isLevel) Color(0xFF10B981) else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        // Level coordinate grid crosshairs
-                        Canvas(modifier = Modifier.size((bubbleLevelSize.value * 0.31f).dp)) {
-                            val c = Offset(size.width / 2, size.width / 2)
-                            drawCircle(
-                                color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.4f) else primaryColor.copy(alpha = 0.18f),
-                                radius = size.width / 2,
-                                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
-                            )
-                            drawLine(
-                                color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.25f) else primaryColor.copy(alpha = 0.12f),
-                                start = Offset(c.x, 0f),
-                                end = Offset(c.x, size.height),
-                                strokeWidth = 1.dp.toPx()
-                            )
-                            drawLine(
-                                color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.25f) else primaryColor.copy(alpha = 0.12f),
-                                start = Offset(0f, c.y),
-                                end = Offset(size.width, c.y),
-                                strokeWidth = 1.dp.toPx()
-                            )
-                        }
-
-                        // Floating dynamic fluid bubble
-                        val bubbleColor = if (isLevel) Color(0xFF10B981) else Color(0xFFFF9800)
-                        
-                        Box(
-                            modifier = Modifier
-                                .offset(
-                                    x = (-rollState * bubbleTravelFactor).dp,
-                                    y = (pitchState * bubbleTravelFactor).dp
-                                )
-                                .size((bubbleLevelSize.value * 0.2f).coerceIn(10f, 16f).dp)
-                                .background(
-                                    brush = Brush.radialGradient(
-                                        colors = listOf(
-                                            bubbleColor,
-                                            bubbleColor.copy(alpha = 0.7f),
-                                            Color.Transparent
-                                        )
-                                    ),
-                                    shape = CircleShape
-                                )
-                                .border(1.1.dp, Color.White.copy(alpha = 0.6f), CircleShape)
-                                .graphicsLayer(shadowElevation = 3f)
-                        )
-
-                        // Heading Degrees text superimposed at the center
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text(
-                                text = String.format(Locale.getDefault(), "%d°", finalHeading.toInt()),
-                                fontSize = (bubbleLevelSize.value * 0.158f).coerceIn(9f, 13f).sp,
-                                fontWeight = FontWeight.Black,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier
-                                    .background(
-                                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.82f),
-                                        shape = RoundedCornerShape(4.dp)
-                                    )
-                                    .padding(horizontal = 4.dp, vertical = 1.dp)
-                            )
-                            Text(
-                                text = getDirectionAbbreviation(finalHeading),
-                                fontSize = (bubbleLevelSize.value * 0.1f).coerceIn(7f, 10f).sp,
-                                color = if (isLevel) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Guidance feedback block at bottom
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            ) {
-                // 1. Direct Alignment Locked Indicator
-                AnimatedContent(
-                    targetState = isAligned,
-                    transitionSpec = {
-                        fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(90))
-                    },
-                    label = "aligned_status"
-                ) { targetAligned ->
-                    if (targetAligned) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .background(
-                                    color = Color(0xFF4CAF50).copy(alpha = 0.12f),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .border(1.1.dp, Color(0xFF4CAF50).copy(alpha = 0.45f), RoundedCornerShape(12.dp))
-                                .padding(horizontal = 24.dp, vertical = 12.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = "Selesai",
-                                tint = Color(0xFF4CAF50),
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(
-                                text = "Kiblat Terkunci! Menghadap Ka'bah",
-                                color = Color(0xFF2E7D32),
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 14.sp
-                            )
-                        }
-                    } else {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
-                                    shape = RoundedCornerShape(12.dp)
-                                )
-                                .border(1.1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
-                                .padding(horizontal = 18.dp, vertical = 12.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.CompassCalibration,
-                                contentDescription = "Putar Ponsel",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            val roundedDiff = ((relativeQiblaAngle + 180) % 360 - 180).toInt()
-                            val turnInstruction = if (roundedDiff > 0) {
-                                "Putar Kanan ${abs(roundedDiff)}°"
-                            } else {
-                                "Putar Kiri ${abs(roundedDiff)}°"
-                            }
-                            Text(
-                                text = "$turnInstruction untuk menyelaraskan",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // 2. Levelling Bubble Guidance (warns user if tilt of device is too steep)
-                AnimatedVisibility(
-                    visible = isSensorAvailable && !isLevel,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                color = Color(0xFFFF9800).copy(alpha = 0.08f),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .border(1.dp, Color(0xFFFF9800).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Rekomendasi Level",
-                            tint = Color(0xFFFF9800),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Posisikan ponsel mendatar agar kompas lebih akurat",
-                            color = Color(0xFFE65100),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // 3. Fallback or Manual calibration instruction panel
-                if (!isSensorAvailable) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.25f),
-                                shape = RoundedCornerShape(14.dp)
-                            )
-                            .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
-                            .padding(14.dp)
-                    ) {
-                        Column {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Default.CompassCalibration,
-                                    contentDescription = "No sensor",
-                                    tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Sensor Kompas Tidak Ditemukan",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = "Perangkat Anda tidak memiliki sensor kompas magnetik. Gunakan simulasi manual kemudi di bawah ini:",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            
-                            // Interactive Calibration Slider
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Utara:", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(44.dp))
-                                Slider(
-                                    value = manualHeading,
-                                    onValueChange = { manualHeading = it },
-                                    valueRange = 0f..360f,
-                                    colors = SliderDefaults.colors(
-                                        thumbColor = MaterialTheme.colorScheme.primary,
-                                        activeTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-                                    ),
-                                    modifier = Modifier.weight(1f)
-                                )
-                                Text("${manualHeading.toInt()}°", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(44.dp), textAlign = TextAlign.End)
-                            }
-                        }
-                    }
-                } else {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CompassCalibration,
-                            contentDescription = "Status Sensor",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f),
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Kalibrasi kompas dengan mengayunkan ponsel membentuk angka 8",
-                            fontSize = 11.sp,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    GuidanceControls(
+                        isAligned = isAligned,
+                        isLevel = isLevel,
+                        isSensorAvailable = isSensorAvailable,
+                        relativeQiblaAngle = relativeQiblaAngle,
+                        manualHeading = manualHeading,
+                        onManualHeadingChange = { manualHeading = it }
+                    )
                 }
             }
         }
     }
 
-    // Interactive explanatory guide popup dialog
     if (showHelpDialog) {
         AlertDialog(
             onDismissRequest = { showHelpDialog = false },
@@ -1040,8 +466,698 @@ fun QiblaFinderScreen(
     }
 }
 
-// Draw cardinal labels helper
-private fun DrawScope.drawCompassLabel(
+@Composable
+private fun DetailsCard(
+    userLocationName: String,
+    userLatitude: Double,
+    userLongitude: Double,
+    distanceToKaaba: Double,
+    qiblaAngle: Double,
+    isSensorAvailable: Boolean,
+    sensorAccuracy: Int
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(46.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Place,
+                        contentDescription = "Location Pin",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "LOKASI SAAT INI",
+                        fontSize = 10.sp,
+                        letterSpacing = 1.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = userLocationName,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    )
+                }
+                
+                Box(
+                    modifier = Modifier
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                                )
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = String.format(Locale.getDefault(), "%.1f°", qiblaAngle),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.08f)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "KOORDINAT",
+                        fontSize = 9.sp,
+                        letterSpacing = 0.5.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = String.format(Locale.US, "%.4f°, %.4f°", userLatitude, userLongitude),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                    )
+                }
+                
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "JARAK KE KA'BAH",
+                        fontSize = 9.sp,
+                        letterSpacing = 0.5.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = String.format(Locale.US, "%,.0f km", distanceToKaaba),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.tertiary.takeOrElse { Color(0xFFD4AF37) }
+                    )
+                }
+            }
+            
+            if (isSensorAvailable) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = when (sensorAccuracy) {
+                                SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF4CAF50).copy(alpha = 0.08f)
+                                SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFFF9800).copy(alpha = 0.08f)
+                                else -> Color(0xFFF44336).copy(alpha = 0.08f)
+                            },
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                              .background(
+                                  color = when (sensorAccuracy) {
+                                      SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF4CAF50)
+                                      SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFFF9800)
+                                      else -> Color(0xFFF44336)
+                                  },
+                                  shape = CircleShape
+                              )
+                      )
+                      Spacer(modifier = Modifier.width(8.dp))
+                      Text(
+                          text = when (sensorAccuracy) {
+                              SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "Presisi Tinggi (Kompas Handal)"
+                              SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "Presisi Sedang (Kalibrasi Ringan)"
+                              else -> "Akurasi Rendah! Buat Gerakan Angka 8 untuk Kalibrasi"
+                          },
+                          fontSize = 10.sp,
+                          fontWeight = FontWeight.Bold,
+                          color = when (sensorAccuracy) {
+                              SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> Color(0xFF2E7D32)
+                              SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> Color(0xFFEF6C00)
+                              else -> Color(0xFFC62828)
+                          }
+                      )
+                  }
+              }
+          }
+      }
+  }
+
+  @Composable
+  private fun GuidanceControls(
+      isAligned: Boolean,
+      isLevel: Boolean,
+      isSensorAvailable: Boolean,
+      relativeQiblaAngle: Double,
+      manualHeading: Float,
+      onManualHeadingChange: (Float) -> Unit
+  ) {
+      Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier.fillMaxWidth()
+      ) {
+          AnimatedContent(
+              targetState = isAligned,
+              transitionSpec = {
+                  fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(90))
+              },
+              label = "aligned_status"
+          ) { targetAligned ->
+              if (targetAligned) {
+                  Row(
+                      verticalAlignment = Alignment.CenterVertically,
+                      modifier = Modifier
+                          .background(
+                              color = Color(0xFF10B981).copy(alpha = 0.12f),
+                              shape = RoundedCornerShape(12.dp)
+                          )
+                          .border(1.1.dp, Color(0xFF10B981).copy(alpha = 0.45f), RoundedCornerShape(12.dp))
+                          .padding(horizontal = 24.dp, vertical = 12.dp)
+                  ) {
+                      Icon(
+                          imageVector = Icons.Default.CheckCircle,
+                          contentDescription = "Selesai",
+                          tint = Color(0xFF10B981),
+                          modifier = Modifier.size(20.dp)
+                      )
+                      Spacer(modifier = Modifier.width(10.dp))
+                      Text(
+                          text = "Kiblat Terkunci! Menghadap Ka'bah",
+                          color = Color(0xFF065F46),
+                          fontWeight = FontWeight.ExtraBold,
+                          fontSize = 14.sp
+                      )
+                  }
+              } else {
+                  Row(
+                      verticalAlignment = Alignment.CenterVertically,
+                      modifier = Modifier
+                          .background(
+                              color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                              shape = RoundedCornerShape(12.dp)
+                          )
+                          .border(1.1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
+                          .padding(horizontal = 18.dp, vertical = 12.dp)
+                  ) {
+                      Icon(
+                          imageVector = Icons.Default.CompassCalibration,
+                          contentDescription = "Putar Ponsel",
+                          tint = MaterialTheme.colorScheme.primary,
+                          modifier = Modifier.size(18.dp)
+                      )
+                      Spacer(modifier = Modifier.width(10.dp))
+                      val roundedDiff = ((relativeQiblaAngle + 180) % 360 - 180).toInt()
+                      val turnInstruction = if (roundedDiff > 0) {
+                          "Putar Kanan ${abs(roundedDiff)}°"
+                      } else {
+                          "Putar Kiri ${abs(roundedDiff)}°"
+                      }
+                      Text(
+                          text = "$turnInstruction untuk menyelaraskan",
+                          color = MaterialTheme.colorScheme.onSurface,
+                          fontWeight = FontWeight.Bold,
+                          fontSize = 14.sp
+                      )
+                  }
+              }
+          }
+
+          Spacer(modifier = Modifier.height(10.dp))
+
+          AnimatedVisibility(
+              visible = isSensorAvailable && !isLevel,
+              enter = fadeIn() + expandVertically(),
+              exit = fadeOut() + shrinkVertically()
+          ) {
+              Row(
+                  verticalAlignment = Alignment.CenterVertically,
+                  modifier = Modifier
+                      .padding(horizontal = 16.dp)
+                      .background(
+                          color = Color(0xFFFF9800).copy(alpha = 0.08f),
+                          shape = RoundedCornerShape(10.dp)
+                      )
+                      .border(1.dp, Color(0xFFFF9800).copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+                      .padding(horizontal = 12.dp, vertical = 8.dp)
+              ) {
+                  Icon(
+                      imageVector = Icons.Default.Info,
+                      contentDescription = "Rekomendasi Level",
+                      tint = Color(0xFFFF9800),
+                      modifier = Modifier.size(16.dp)
+                  )
+                  Spacer(modifier = Modifier.width(8.dp))
+                  Text(
+                      text = "Posisikan ponsel mendatar agar kompas lebih akurat",
+                      color = Color(0xFFE65100),
+                      fontWeight = FontWeight.SemiBold,
+                      fontSize = 11.sp
+                  )
+              }
+          }
+
+          Spacer(modifier = Modifier.height(6.dp))
+
+          if (!isSensorAvailable) {
+              Box(
+                  modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(horizontal = 12.dp)
+                      .background(
+                          color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.25f),
+                          shape = RoundedCornerShape(14.dp)
+                      )
+                      .border(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
+                      .padding(14.dp)
+              ) {
+                  Column {
+                      Row(verticalAlignment = Alignment.CenterVertically) {
+                          Icon(
+                              imageVector = Icons.Default.CompassCalibration,
+                              contentDescription = "No sensor",
+                              tint = MaterialTheme.colorScheme.error,
+                              modifier = Modifier.size(18.dp)
+                          )
+                          Spacer(modifier = Modifier.width(8.dp))
+                          Text(
+                              text = "Sensor Kompas Tidak Ditemukan",
+                              fontSize = 13.sp,
+                              fontWeight = FontWeight.Bold,
+                              color = MaterialTheme.colorScheme.onErrorContainer
+                          )
+                      }
+                      Spacer(modifier = Modifier.height(6.dp))
+                      Text(
+                          text = "Perangkat Anda tidak memiliki sensor kompas magnetik. Gunakan simulasi manual kemudi di bawah ini:",
+                          fontSize = 12.sp,
+                          color = MaterialTheme.colorScheme.onSurfaceVariant
+                      )
+                      Spacer(modifier = Modifier.height(10.dp))
+                      
+                      Row(
+                          verticalAlignment = Alignment.CenterVertically,
+                          modifier = Modifier.fillMaxWidth()
+                      ) {
+                          Text("Utara:", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(44.dp))
+                          Slider(
+                              value = manualHeading,
+                              onValueChange = onManualHeadingChange,
+                              valueRange = 0f..360f,
+                              colors = SliderDefaults.colors(
+                                  thumbColor = MaterialTheme.colorScheme.primary,
+                                  activeTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+                              ),
+                              modifier = Modifier.weight(1f)
+                          )
+                          Text("${manualHeading.toInt()}°", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.width(44.dp), textAlign = TextAlign.End)
+                      }
+                  }
+              }
+          } else {
+              Row(
+                  verticalAlignment = Alignment.CenterVertically,
+                  horizontalArrangement = Arrangement.Center,
+                  modifier = Modifier.padding(vertical = 4.dp)
+              ) {
+                  Icon(
+                      imageVector = Icons.Default.CompassCalibration,
+                      contentDescription = "Status Sensor",
+                      tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f),
+                      modifier = Modifier.size(12.dp)
+                  )
+                  Spacer(modifier = Modifier.width(6.dp))
+                  Text(
+                      text = "Kalibrasi kompas dengan mengayunkan ponsel membentuk angka 8",
+                      fontSize = 11.sp,
+                      textAlign = TextAlign.Center,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                      fontWeight = FontWeight.Medium
+                  )
+              }
+          }
+      }
+  }
+
+  @Composable
+  private fun CompassDial(
+      boundedCompassSize: androidx.compose.ui.unit.Dp,
+      isAligned: Boolean,
+      isLevel: Boolean,
+      finalHeading: Float,
+      qiblaAngle: Double,
+      relativeQiblaAngle: Double,
+      rollState: Float,
+      pitchState: Float,
+      primaryColor: Color,
+      onSurfaceColor: Color,
+      textSecondary: Color
+  ) {
+      val animatedGlowSize by animateDpAsState(
+          targetValue = if (isAligned) (boundedCompassSize + 30.dp) else (boundedCompassSize - 10.dp),
+          animationSpec = tween(700, easing = LinearOutSlowInEasing),
+          label = "glow_size"
+      )
+      val animatedGlowAlpha by animateFloatAsState(
+          targetValue = if (isAligned) 0.22f else 0.05f,
+          animationSpec = tween(500),
+          label = "glow_alpha"
+      )
+      val alignmentTransitionColor by animateColorAsState(
+          targetValue = if (isAligned) Color(0xFF10B981) else primaryColor,
+          animationSpec = tween(400),
+          label = "alignment_color"
+      )
+
+      Box(
+          contentAlignment = Alignment.Center,
+          modifier = Modifier.size(boundedCompassSize + 36.dp)
+      ) {
+          Box(
+              modifier = Modifier
+                  .size(animatedGlowSize)
+                  .background(
+                      brush = Brush.radialGradient(
+                          colors = listOf(
+                              alignmentTransitionColor,
+                              Color.Transparent
+                          )
+                      ),
+                      shape = CircleShape
+                  )
+                  .graphicsLayer(alpha = animatedGlowAlpha)
+          )
+
+          Box(
+              modifier = Modifier
+                  .size(boundedCompassSize)
+                  .background(
+                      brush = Brush.radialGradient(
+                          colors = listOf(
+                              MaterialTheme.colorScheme.surface,
+                              MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                          )
+                      ),
+                      shape = CircleShape
+                  )
+                  .border(
+                      width = if (isAligned) 6.dp else 2.dp,
+                      color = alignmentTransitionColor.copy(alpha = if (isAligned) 1f else 0.35f),
+                      shape = CircleShape
+                  )
+                  .padding((boundedCompassSize.value * 0.05f).dp),
+              contentAlignment = Alignment.Center
+          ) {
+              Canvas(
+                  modifier = Modifier
+                      .fillMaxSize()
+                      .rotate(-finalHeading)
+              ) {
+                  val canvasSize = size.width
+                  val center = Offset(canvasSize / 2, canvasSize / 2)
+                  val radius = canvasSize / 2
+
+                  drawCircle(
+                      color = textSecondary.copy(alpha = 0.06f),
+                      radius = radius * 0.85f,
+                      style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
+                  )
+                  drawCircle(
+                      color = textSecondary.copy(alpha = 0.06f),
+                      radius = radius * 0.65f,
+                      style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
+                  )
+
+                  val sweepAngle = 30f
+                  val qiblaStartAngle = (qiblaAngle.toFloat() - 90f) - (sweepAngle / 2f)
+                  drawArc(
+                      brush = Brush.radialGradient(
+                          colors = listOf(
+                              Color(0xFFFFD4AF37).copy(alpha = 0.22f),
+                              Color(0xFFFFD4AF37).copy(alpha = 0.04f),
+                              Color.Transparent
+                          ),
+                          center = center,
+                          radius = radius
+                      ),
+                      startAngle = qiblaStartAngle,
+                      sweepAngle = sweepAngle,
+                      useCenter = true
+                  )
+
+                  for (angle in 0 until 360 step 5) {
+                      val angleRad = Math.toRadians(angle.toDouble())
+                      val isMain = angle % 90 == 0
+                      val isSub = angle % 30 == 0 && !isMain
+                      val isFine = !isMain && !isSub && angle % 15 != 0
+                      
+                      val startLength = if (isMain) radius * 0.1f else if (isSub) radius * 0.07f else radius * 0.035f
+                      val strokeWidth = if (isMain) radius * 0.015f else if (isSub) radius * 0.01f else radius * 0.005f
+                      
+                      val startX = (center.x + (radius - startLength) * sin(angleRad)).toFloat()
+                      val startY = (center.y - (radius - startLength) * cos(angleRad)).toFloat()
+                      val endX = (center.x + radius * sin(angleRad)).toFloat()
+                      val endY = (center.y - radius * cos(angleRad)).toFloat()
+
+                      val color = if (isMain && angle == 0) Color(0xFFEF4444)
+                      else if (isMain) primaryColor
+                      else textSecondary.copy(alpha = if (isFine) 0.25f else 0.6f)
+
+                      drawLine(
+                          color = color,
+                          start = Offset(startX, startY),
+                          end = Offset(endX, endY),
+                          strokeWidth = strokeWidth
+                      )
+                  }
+
+                  for (degLabel in 30..330 step 30) {
+                      if (degLabel % 90 == 0) continue
+                      drawDegreesLabel(degLabel.toString(), degLabel.toFloat(), radius, textSecondary, center)
+                  }
+
+                  drawCompassLabel("U", 0f, radius, Color(0xFFEF4444), center)
+                  drawCompassLabel("T", 90f, radius, onSurfaceColor, center)
+                  drawCompassLabel("S", 180f, radius, onSurfaceColor, center)
+                  drawCompassLabel("B", 270f, radius, onSurfaceColor, center)
+
+                  rotate(qiblaAngle.toFloat(), pivot = center) {
+                      drawCircle(
+                          color = Color(0xFFFFD4AF37),
+                          radius = radius * 0.06f,
+                          center = Offset(center.x, center.y - radius + radius * 0.15f)
+                      )
+                      drawCircle(
+                          color = Color.White,
+                          radius = radius * 0.03f,
+                          center = Offset(center.x, center.y - radius + radius * 0.15f)
+                      )
+                  }
+              }
+
+              Box(
+                  modifier = Modifier
+                      .fillMaxSize()
+                      .rotate(relativeQiblaAngle.toFloat())
+                      .padding((boundedCompassSize.value * 0.12f).dp),
+                  contentAlignment = Alignment.Center
+              ) {
+                  Canvas(modifier = Modifier.fillMaxSize()) {
+                      val canvasSize = size.width
+                      val center = Offset(canvasSize / 2, canvasSize / 2)
+
+                      val needleStartColor = if (isAligned) Color(0xFF10B981) else Color(0xFFFFF176)
+                      val needleEndColor = if (isAligned) Color(0xFF059669) else Color(0xFFFFD4AF37)
+
+                      val pointerPath = Path().apply {
+                          moveTo(center.x, canvasSize * 0.02f)
+                          lineTo(center.x - canvasSize * 0.08f, center.y - canvasSize * 0.1f)
+                          lineTo(center.x - canvasSize * 0.025f, center.y - canvasSize * 0.08f)
+                          lineTo(center.x - canvasSize * 0.025f, center.y + canvasSize * 0.2f)
+                          lineTo(center.x + canvasSize * 0.025f, center.y + canvasSize * 0.2f)
+                          lineTo(center.x + canvasSize * 0.025f, center.y - canvasSize * 0.08f)
+                          lineTo(center.x + canvasSize * 0.08f, center.y - canvasSize * 0.1f)
+                          close()
+                      }
+
+                      drawPath(
+                          path = pointerPath,
+                          brush = Brush.verticalGradient(
+                              colors = listOf(needleStartColor, needleEndColor)
+                          )
+                      )
+
+                      drawLine(
+                          color = Color.Black.copy(alpha = 0.12f),
+                          start = Offset(center.x, canvasSize * 0.03f),
+                          end = Offset(center.x, center.y + canvasSize * 0.2f),
+                          strokeWidth = (canvasSize * 0.01f).coerceIn(1.5f, 3f)
+                      )
+                  }
+
+                  Box(
+                      modifier = Modifier
+                          .align(Alignment.TopCenter)
+                          .offset(y = (-boundedCompassSize * 0.03f))
+                          .size((boundedCompassSize.value * 0.11f).coerceIn(24f, 36f).dp)
+                          .background(
+                              brush = Brush.radialGradient(
+                                  colors = listOf(Color(0xFFFFF9C4), Color(0xFFFFD4AF37))
+                              ),
+                              shape = CircleShape
+                          )
+                          .border(1.5.dp, Color.White, CircleShape),
+                      contentAlignment = Alignment.Center
+                  ) {
+                      Icon(
+                          imageVector = Icons.Default.Mosque,
+                          contentDescription = null,
+                          tint = Color(0xFF131D19),
+                          modifier = Modifier.size((boundedCompassSize.value * 0.057f).coerceIn(12f, 18f).dp)
+                      )
+                  }
+              }
+
+              val bubbleLevelSize = (boundedCompassSize.value * 0.27f).coerceIn(55f, 80f).dp
+              val bubbleTravelFactor = (boundedCompassSize.value * 0.08f).coerceIn(14f, 24f)
+
+              Box(
+                  modifier = Modifier
+                      .size(bubbleLevelSize)
+                      .background(
+                          brush = Brush.verticalGradient(
+                              colors = listOf(
+                                  MaterialTheme.colorScheme.surface,
+                                  MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                              )
+                          ),
+                          shape = CircleShape
+                      )
+                      .border(
+                          width = 2.dp,
+                          color = if (isLevel) Color(0xFF10B981) else MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                          shape = CircleShape
+                      ),
+                  contentAlignment = Alignment.Center
+              ) {
+                  Canvas(modifier = Modifier.size((bubbleLevelSize.value * 0.31f).dp)) {
+                      val c = Offset(size.width / 2, size.width / 2)
+                      drawCircle(
+                          color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.4f) else primaryColor.copy(alpha = 0.18f),
+                          radius = size.width / 2,
+                          style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.dp.toPx())
+                      )
+                      drawLine(
+                          color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.25f) else primaryColor.copy(alpha = 0.12f),
+                          start = Offset(c.x, 0f),
+                          end = Offset(c.x, size.height),
+                          strokeWidth = 1.dp.toPx()
+                      )
+                      drawLine(
+                          color = if (isLevel) Color(0xFF10B981).copy(alpha = 0.25f) else primaryColor.copy(alpha = 0.12f),
+                          start = Offset(0f, c.y),
+                          end = Offset(size.width, c.y),
+                          strokeWidth = 1.dp.toPx()
+                      )
+                  }
+
+                  val bubbleColor = if (isLevel) Color(0xFF10B981) else Color(0xFFFF9800)
+                  
+                  Box(
+                      modifier = Modifier
+                          .offset(
+                              x = (-rollState * bubbleTravelFactor).dp,
+                              y = (pitchState * bubbleTravelFactor).dp
+                          )
+                          .size((bubbleLevelSize.value * 0.2f).coerceIn(10f, 16f).dp)
+                          .background(
+                              brush = Brush.radialGradient(
+                                  colors = listOf(
+                                      bubbleColor,
+                                      bubbleColor.copy(alpha = 0.7f),
+                                      Color.Transparent
+                                  )
+                              ),
+                              shape = CircleShape
+                          )
+                          .border(1.1.dp, Color.White.copy(alpha = 0.6f), CircleShape)
+                          .graphicsLayer(shadowElevation = 3f)
+                  )
+
+                  Column(
+                      horizontalAlignment = Alignment.CenterHorizontally,
+                      verticalArrangement = Arrangement.Center,
+                      modifier = Modifier.fillMaxSize()
+                  ) {
+                      Text(
+                          text = String.format(Locale.getDefault(), "%d°", finalHeading.toInt()),
+                          fontSize = (bubbleLevelSize.value * 0.158f).coerceIn(9f, 13f).sp,
+                          fontWeight = FontWeight.Black,
+                          color = MaterialTheme.colorScheme.onSurface,
+                          modifier = Modifier
+                              .background(
+                                  color = MaterialTheme.colorScheme.surface.copy(alpha = 0.82f),
+                                  shape = RoundedCornerShape(4.dp)
+                              )
+                              .padding(horizontal = 4.dp, vertical = 1.dp)
+                      )
+                      Text(
+                          text = getDirectionAbbreviation(finalHeading),
+                          fontSize = (bubbleLevelSize.value * 0.1f).coerceIn(7f, 10f).sp,
+                          color = if (isLevel) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                          fontWeight = FontWeight.ExtraBold
+                      )
+                  }
+              }
+          }
+      }
+  }
+
+private fun DrawScope.drawDegreesLabel(
     text: String,
     angle: Float,
     radius: Float,
@@ -1049,14 +1165,14 @@ private fun DrawScope.drawCompassLabel(
     center: Offset
 ) {
     val angleRad = Math.toRadians(angle.toDouble())
-    val textYOffset = 4.dp.toPx()
-    val textX = (center.x + (radius - 32.dp.toPx()) * sin(angleRad)).toFloat()
-    val textY = (center.y - (radius - 32.dp.toPx()) * cos(angleRad)).toFloat()
+    val textYOffset = radius * 0.015f
+    val textX = (center.x + (radius * 0.85f) * sin(angleRad)).toFloat()
+    val textY = (center.y - (radius * 0.85f) * cos(angleRad)).toFloat()
 
     val paint = android.graphics.Paint().apply {
         isAntiAlias = true
-        textSize = 13.dp.toPx()
-        typeface = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+        textSize = radius * 0.055f
+        typeface = android.graphics.Typeface.create(android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.NORMAL)
         this.color = color.hashCode()
         textAlign = android.graphics.Paint.Align.CENTER
     }
@@ -1069,8 +1185,7 @@ private fun DrawScope.drawCompassLabel(
     )
 }
 
-// Draw tick mark degrees numbers helper
-private fun DrawScope.drawDegreesLabel(
+private fun DrawScope.drawCompassLabel(
     text: String,
     angle: Float,
     radius: Float,
@@ -1078,14 +1193,14 @@ private fun DrawScope.drawDegreesLabel(
     center: Offset
 ) {
     val angleRad = Math.toRadians(angle.toDouble())
-    val textYOffset = 2.5.dp.toPx()
-    val textX = (center.x + (radius - 18.dp.toPx()) * sin(angleRad)).toFloat()
-    val textY = (center.y - (radius - 18.dp.toPx()) * cos(angleRad)).toFloat()
+    val textYOffset = radius * 0.022f
+    val textX = (center.x + (radius * 0.76f) * sin(angleRad)).toFloat()
+    val textY = (center.y - (radius * 0.76f) * cos(angleRad)).toFloat()
 
     val paint = android.graphics.Paint().apply {
         isAntiAlias = true
-        textSize = 7.5.dp.toPx()
-        typeface = android.graphics.Typeface.create(android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.NORMAL)
+        textSize = radius * 0.10f
+        typeface = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
         this.color = color.hashCode()
         textAlign = android.graphics.Paint.Align.CENTER
     }
