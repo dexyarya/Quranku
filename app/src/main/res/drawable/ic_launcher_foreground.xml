@@ -1,0 +1,76 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Outer spiritual glowing circle (representing the splash outer circle) -->
+    <path
+        android:fillColor="#1513251E"
+        android:strokeColor="#2E72DBA2"
+        android:strokeWidth="0.8"
+        android:pathData="M 54,14 A 40,40 0 1,1 53.9,14 Z" />
+        
+    <!-- Inner glowing circle (representing the splash inner core) -->
+    <path
+        android:fillColor="#2272DBA2"
+        android:strokeColor="#5272DBA2"
+        android:strokeWidth="0.5"
+        android:pathData="M 54,21 A 33,33 0 1,1 53.9,21 Z" />
+
+    <!-- Left Minaret Tower Pillar -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 28.5,46 L 31.5,46 L 31,74 L 29,74 Z" />
+        
+    <!-- Left Minaret Golden Balcony -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M 27,44 L 33,44 L 33,46 L 27,46 Z" />
+        
+    <!-- Left Minaret Dome Cap -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 30,35 C 28,39 28,44 28,44 L 32,44 C 32,44 32,39 30,35 Z" />
+
+    <!-- Right Minaret Tower Pillar -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 76.5,46 L 79.5,46 L 79,74 L 77,74 Z" />
+        
+    <!-- Right Minaret Golden Balcony -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M 75,44 L 81,44 L 81,46 L 75,46 Z" />
+        
+    <!-- Right Minaret Dome Cap -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 78,35 C 76,39 76,44 76,44 L 80,44 C 80,44 80,39 78,35 Z" />
+
+    <!-- Main Mosque center foundation base -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 24,74 L 84,74 L 84,77 L 24,77 Z" />
+
+    <!-- Main Center Marble Dome -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M 54,36 C 44,36 41,47 39,54 C 37.5,60 37.5,74 37.5,74 L 70.5,74 C 70.5,74 70.5,60 69,54 C 67,47 64,36 54,36 Z" />
+
+    <!-- Arch Cutout/Inner gate (providing transparent-depth look) -->
+    <path
+        android:fillColor="#0D1F16"
+        android:pathData="M 54,54 C 49,54 47.5,60 47.5,64 L 47.5,74 L 60.5,74 L 60.5,64 C 60.5,60 59,54 54,54 Z" />
+
+    <!-- Golden Floating Crescent on Center Dome -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M 54,15 C 51.5,15 49.3,16.5 48.3,18.7 C 50.8,19.1 52.5,21.5 52.5,24.3 C 52.5,27.2 50.8,29.5 48.3,29.9 C 49.3,32.1 51.5,33.6 54,33.6 C 59.2,33.6 63.3,29.5 63.3,24.3 C 63.3,19.1 59.2,15 54,15 Z" />
+        
+    <!-- Golden Floating Star on Top -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M 54,7 L 55.5,10 L 59,10.5 L 56.5,13 L 57.3,16.5 L 54,14.8 L 50.7,16.5 L 51.2,13 L 49,10.5 L 52.5,10 Z" />
+        
+</vector>

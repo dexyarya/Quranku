@@ -1,0 +1,6 @@
+{
+  "name": "Quran ku",
+  "description": "Aplikasi pencatatan khutbah Jumat masjid-masjid terdaftar dengan visual yang modern.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
