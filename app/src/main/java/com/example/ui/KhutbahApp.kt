@@ -64,6 +64,7 @@ fun KhutbahApp(viewModel: KhutbahViewModel) {
 
     var currentBottomTab by remember { mutableIntStateOf(0) } // 0 = Beranda, 1 = Al-Qur'an, 2 = Doa & Guide, 3 = Shalat, 4 = Khutbah, 5 = Settings
     var activeTab by remember { mutableIntStateOf(0) } // 0 = Catatan Khutbah, 1 = Masjid Terdaftar, 2 = Jadwal Petugas (under Khutbah)
+    var initialRatibTab by remember { mutableIntStateOf(0) }
 
     var showSplashScreen by remember { mutableStateOf(true) }
 
@@ -353,7 +354,17 @@ fun KhutbahApp(viewModel: KhutbahViewModel) {
                         0 -> {
                             DashboardScreen(
                                 viewModel = viewModel,
-                                onNavigateToTab = { index -> currentBottomTab = index },
+                                onNavigateToTab = { index -> 
+                                    if (index == 7) {
+                                        initialRatibTab = 0
+                                        currentBottomTab = 7
+                                    } else if (index == 8) {
+                                        initialRatibTab = 1
+                                        currentBottomTab = 7
+                                    } else {
+                                        currentBottomTab = index
+                                    }
+                                },
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -523,6 +534,14 @@ fun KhutbahApp(viewModel: KhutbahViewModel) {
                         6 -> {
                             QiblaFinderScreen(
                                 viewModel = viewModel,
+                                onBack = { currentBottomTab = 0 },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        7 -> {
+                            RatibMaulidScreen(
+                                viewModel = viewModel,
+                                initialTab = initialRatibTab,
                                 onBack = { currentBottomTab = 0 },
                                 modifier = Modifier.fillMaxSize()
                             )

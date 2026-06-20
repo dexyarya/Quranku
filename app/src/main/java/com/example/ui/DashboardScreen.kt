@@ -572,6 +572,30 @@ fun DashboardScreen(
                         }
                     )
                 }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    FeatureShortcutCard(
+                        icon = Icons.Default.VerifiedUser,
+                        title = "Dzikir Ratib",
+                        subtitle = "Ratib Al-Haddad & Al-Athos lengkap",
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        onClick = { onNavigateToTab(7) }
+                    )
+                    FeatureShortcutCard(
+                        icon = Icons.Default.Stars,
+                        title = "Maulid Nabi",
+                        subtitle = "Simtudduror & Al-Barzanji lengkap",
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        onClick = { onNavigateToTab(8) }
+                    )
+                }
             }
         }
     }
